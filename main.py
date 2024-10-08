@@ -1,6 +1,7 @@
 from typing import Union
-from fastapi import FastAPI
+from fastapi import FastAPI, Header, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from typing import Annotated
 
 app = FastAPI()
 
@@ -16,8 +17,14 @@ app.add_middleware(
 
 
 @app.get("/")
-def read_root():
-    return {"ms": "la respuesta se ha generado con exito", "color": "red"}
+def read_root(token: Annotated[str | None, Header()] = None):
+    if token is None:
+        raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="actualmente no tiene permisos",
+                headers={"auth": "Bienvenido a la api de darkhusky"}, # se contesta como consideres el error
+            )
+    return {"ms": "Bienvenido a la api de darkhusky", "warnings": "actualmente no tiene permisos"}
 
 
 @app.get("/items/{item_id}")
