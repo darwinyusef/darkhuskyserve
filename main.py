@@ -16,7 +16,7 @@ app.add_middleware(
 )
 
 
-@app.get("/")
+@app.get("/", tags=["Root"])
 def read_root(token: Annotated[str | None, Header()] = None):
     if token is None:
         raise HTTPException(
@@ -24,9 +24,9 @@ def read_root(token: Annotated[str | None, Header()] = None):
                 detail="actualmente no tiene permisos",
                 headers={"auth": "Bienvenido a la api de darkhusky"}, # se contesta como consideres el error
             )
-    return {"ms": "Bienvenido a la api de darkhusky", "warnings": "actualmente no tiene permisos"}
+    return {"ms": "Bienvenido a la api de darkhusky", "accede": "http://198.211.106.31/items/1?q=nos_destruiran_a_todos"}
 
 
-@app.get("/items/{item_id}")
+@app.get("/items/{item_id}", tags=["Items"])
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
